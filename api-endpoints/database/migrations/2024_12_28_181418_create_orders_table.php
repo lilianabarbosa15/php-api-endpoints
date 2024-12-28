@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            //UserID
+            //OrderDate
+            $table->integer('total_amount')
+                ->unsigned()
+                ->default(0);
+            $table->enum('order_status', ['pending', 'completed', 'shipped', 'cancelled'])
+                ->default('pending');
+            $table->string('payment_method'); // Visa, MasterCard, Discover, UnionPay, Diners Club, JCB, AMEX.
+            $table->text('shipping_address');
             $table->timestamps();
         });
     }

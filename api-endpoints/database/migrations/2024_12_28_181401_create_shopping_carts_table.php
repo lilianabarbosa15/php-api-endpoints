@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('shopping_carts', function (Blueprint $table) {
-            $table->id();
+            $table->id();       //CartID
+            // UserID
+            $table->enum('status', ['pending', 'completed', 'shipped', 'cancelled'])
+                ->default('pending');
             $table->timestamps();
         });
     }

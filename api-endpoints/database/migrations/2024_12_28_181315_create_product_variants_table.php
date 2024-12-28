@@ -13,11 +13,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_variants', function (Blueprint $table) {
-            $table->id();                   //VariantID
-            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete(); //ProductID
-            $table->string('color', 7);     //#RRGGBB
-            $table->string('size', 3);      // Size as a string (S, M, L, XL, etc.)
-            $table->integer('stock_quantity')->default(0);
+            $table->id();                           //VariantID
+            $table->foreignIdFor(Product::class)    //ProductID
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->string('color', 7);             //#RRGGBB
+            $table->string('size', 3);              // Size as a string (S, M, L, XL, etc.)
+            $table->integer('stock_quantity')
+                ->unsigned()
+                ->default(0);
             $table->timestamps();
         });
     }

@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();                   //ProductID
             $table->string('name');         //ProductName
             $table->string('description');  //ProductDescription
-            $table->decimal('price',5,2)->default(0);
+            $table->decimal('price',5,2)
+                ->unsigned()
+                ->default(0);
             $table->json('other_attributes')->nullable();
             $table->timestamps();
         });

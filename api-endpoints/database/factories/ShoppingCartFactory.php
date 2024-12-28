@@ -17,7 +17,7 @@ class ShoppingCartFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'status' => $this->faker->randomElement(['pending', 'completed', 'shipped', 'cancelled']),
         ];
     }
 }
