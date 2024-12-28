@@ -19,7 +19,6 @@ return new class extends Migration
                 ->unsigned()
                 ->default(0);
             $table->json('other_attributes')->nullable();
-            $table->timestamps();
         });
     }
 

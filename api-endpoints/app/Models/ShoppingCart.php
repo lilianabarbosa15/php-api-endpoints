@@ -15,6 +15,7 @@ class ShoppingCart extends Model
 
     public function product_variants() {
         return $this->belongsToMany(ProductVariant::class, 'cart_items', 'shopping_cart_id', 'product_variant_id')
+                    ->withPivot('quantity', 'unit_price') // to access the pivot table columns
                     ->using(CartItem::class);
     }
 }

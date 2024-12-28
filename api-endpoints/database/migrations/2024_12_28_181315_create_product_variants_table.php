@@ -22,7 +22,6 @@ return new class extends Migration
             $table->integer('stock_quantity')
                 ->unsigned()
                 ->default(0);
-            $table->timestamps();
         });
     }
 

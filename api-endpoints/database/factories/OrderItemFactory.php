@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\OrderItem;
+
 use App\Models\Order;
 use App\Models\ProductVariant;
 /**
@@ -23,6 +25,8 @@ class OrderItemFactory extends Factory
         return [
             'order_id'=> $this->faker->randomElement($ordersIds),
             'product_variant_id'=> $this->faker->randomElement($productVariantsIds),
+            'quantity' => $this->faker->numberBetween(1, 10),
+            'unit_price' => $this->faker->randomFloat(2, 10, 700),
         ];
     }
 }

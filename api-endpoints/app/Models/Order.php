@@ -15,6 +15,7 @@ class Order extends Model
 
     public function product_variants() {
         return $this->belongsToMany(ProductVariant::class, 'order_items', 'order_id', 'product_variant_id')
+                    ->withPivot('quantity', 'unit_price') // to access the pivot table columns
                     ->using(OrderItem::class);
     }
 }

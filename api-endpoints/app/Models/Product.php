@@ -11,6 +11,8 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
 
+    public $timestamps = false;
+
     public function product_variants() {
         return $this->hasMany(ProductVariant::class);
     }
