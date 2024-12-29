@@ -19,19 +19,22 @@ class ProductVariant extends Model
 
     public $timestamps = false;
 
+    protected $fillable = [
+        'product_id',
+        'color',
+        'size',
+        'stock_quantity',
+    ];
+
     public function product() {
         return $this->belongsTo(Product::class);
     }
-
-    public function orders() {
-        return $this->belongsToMany(Order::class, 'order_items', 'product_variant_id', 'order_id')
-                    ->withPivot('quantity', 'unit_price') // to access the pivot table columns
-                    ->using(OrderItem::class);
+    
+    public function order_items() {
+        return $this->hasMany(OrderItem::class, 'product_variant_id', 'id');
     }
 
-    public function shopping_carts() {
-        return $this->belongsToMany(ShoppingCart::class, 'cart_items', 'product_variant_id', 'shopping_cart_id')
-                    ->withPivot('quantity', 'unit_price') // to access the pivot table columns
-                    ->using(CartItem::class);
+    public function cart_items() {
+        return $this->hasMany(CartItem::class, 'product_variant_id', 'id');
     }
 }

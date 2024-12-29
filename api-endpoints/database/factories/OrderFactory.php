@@ -20,7 +20,7 @@ class OrderFactory extends Factory
         $usersIds = User::all()->pluck("id")->toArray();
         return [
             'user_id' => $this->faker->randomElement($usersIds),
-            'total_amount' => $this->faker->numberBetween(1, 100),
+            'total_amount' => $this->faker->randomFloat(2, 11, 100),
             'order_status' => $this->faker->randomElement(['pending', 'completed', 'shipped', 'cancelled']),
             'payment_method' => $this->faker->randomElement(['Visa', 'MasterCard', 'Discover', 'UnionPay', 'Diners Club', 'JCB', 'AMEX']),
             'shipping_address' => $this->faker->address,
