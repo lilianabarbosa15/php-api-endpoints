@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,7 +17,9 @@ class ShoppingCartFactory extends Factory
      */
     public function definition(): array
     {
+        $usersIds = User::all()->pluck("id")->toArray();
         return [
+            'user_id' => $this->faker->randomElement($usersIds),
             'status' => $this->faker->randomElement(['pending', 'completed', 'shipped', 'cancelled']),
         ];
     }

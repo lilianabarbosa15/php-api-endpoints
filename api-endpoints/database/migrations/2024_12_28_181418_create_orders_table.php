@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,9 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            //UserID
-            //OrderDate
+            $table->id();                       //OrderID
+            $table->foreignIdFor(User::class)   // UserID
+                ->constrained()
+                ->cascadeOnDelete();
             $table->integer('total_amount')
                 ->unsigned()
                 ->default(0);
@@ -22,7 +24,7 @@ return new class extends Migration
                 ->default('pending');
             $table->string('payment_method'); // Visa, MasterCard, Discover, UnionPay, Diners Club, JCB, AMEX.
             $table->text('shipping_address');
-            $table->timestamps();
+            $table->timestamps();   //OrderDate (created_at), LastUpdate (updated_at)
         });
     }
 
