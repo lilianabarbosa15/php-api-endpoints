@@ -34,9 +34,9 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource (Product's database)
      * http://api-endpoints.test/api/v1/product
-     * http://api-endpoints.test/api/v1/products?per_page=4&page=4
-     * http://api-endpoints.test/api/v1/products?page=4
-     * http://api-endpoints.test/api/v1/products?per_page=4
+     * e.g. http://api-endpoints.test/api/v1/products?per_page=4&page=4
+     * e.g. http://api-endpoints.test/api/v1/products?page=4
+     * e.g. http://api-endpoints.test/api/v1/products?per_page=4
      */
     public function index(Request $request) 
     {
@@ -75,7 +75,7 @@ class ProductController extends Controller
      *  A list of products that satisfy all applied filters
      */
 
-    // http://api-endpoints.test/api/v1/products/search?color=%2308682a
+    // e.g. http://api-endpoints.test/api/v1/products/search?color=%2308682a
     private function _filterByColor(Request $request, Builder $query): Builder
     {
         /*
@@ -90,7 +90,7 @@ class ProductController extends Controller
         return $query;
     }
 
-    // http://api-endpoints.test/api/v1/products/search?name=Molestias_saepe_consequatur
+    // e.g. http://api-endpoints.test/api/v1/products/search?name=Molestias_saepe_consequatur
     private function _filterByName(Request $request, Builder $query): Builder
     {
         if($request->has('name')) {
@@ -99,7 +99,7 @@ class ProductController extends Controller
         return $query;
     }
 
-    // http://api-endpoints.test/api/v1/products/search?max_price=192.38&min_price=100
+    // e.g. http://api-endpoints.test/api/v1/products/search?max_price=192.38&min_price=100
     private function _filterByPrice(Request $request, Builder $query): Builder
     {
         if($request->has('min_price')) {
@@ -111,7 +111,7 @@ class ProductController extends Controller
         return $query;
     }
 
-    // http://api-endpoints.test/api/v1/products/search?size=L
+    // e.g. http://api-endpoints.test/api/v1/products/search?size=L
     private function _filterBySize(Request $request, Builder $query): Builder
     {
         if($request->has('size')) {
@@ -123,7 +123,7 @@ class ProductController extends Controller
         return $query;
     }
 
-    // http://api-endpoints.test/api/v1/search?attributes=brand&value=GUCCI
+    // e.g. http://api-endpoints.test/api/v1/search?attributes=brand&value=GUCCI
     private function _filterByAttribute(Request $request, Builder $query): Builder
     {
         /*
