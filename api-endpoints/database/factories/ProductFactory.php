@@ -26,6 +26,8 @@ class ProductFactory extends Factory
                 'pattern' => $this->faker->randomElement(['solid', 'striped', 'plaid']),
                 'brand' => $this->faker->randomElement(['CHANEL', 'PRADA', 'GUCCI','VERSACE','LOUIS VUITTON']),
                 'care_instructions' => $this->faker->sentence,
+                'collection' => $this->faker->randomElement(['summer', 'winter', 'autumn']),
+                'gender' => $this->faker->randomElement(['unisex', 'woman', 'men']),
             ]),
             
         ];

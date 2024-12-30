@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\v1\ShoppingCartController;
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\OrderController;
 use App\Http\Controllers\Api\v1\ProductController;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 
 
