@@ -7,11 +7,11 @@ use App\Models\Product;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Contracts\Validation\Validator;
 
 
 class ProductController extends Controller
 {
+
 
     private function _decodeJsonAttributes( Object $items ): Object
     {
@@ -190,100 +190,37 @@ class ProductController extends Controller
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-Route::prefix('products')->group( function () {
-        Route::post('/', [ProductController::class, 'store']);
-        Route::put('/{id}', [ProductController::class, 'update']);
-        Route::delete('/{id}', [ProductController::class, 'destroy']);
-    });
-*/
-
-
-/*
-    public function show(int $id)
+    /**
+     * 
+     * 
+     * The functions below are private and can only be accessed by the administrator.
+     * This is why the routes require the Sanctum middleware for authentication.
+     * 
+     * 
+     */
+
+    private function _validations(?Request $request = null) : void
     {
-        $product = Product::find($id);
-        
-        //If there is no product in the database we return a 404.
-        if(!$product) {
-            return response()->json(["message" => "Product Not Found"], 404);
+        //Data validation
+        if ($request != null) {
+            $request->validate([
+                'name' => 'required|string',
+                'description' => 'required|string',
+                'price' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+                'other_attributes' => 'nullable|array',
+                'other_attributes.material' => 'nullable|string',
+                'other_attributes.pattern' => 'nullable|string',
+                'other_attributes.brand' => 'nullable|string',
+                'other_attributes.care_instructions' => 'nullable|string',
+                'other_attributes.collection' => 'nullable|string',
+                'other_attributes.gender' => 'nullable|string',
+            ]);
         }
+        
+        //Verification of the type of User (admin)
+        /////
 
-        //Tranformation of the JSON element other_atributes.
-        $product->other_attributes = json_decode($product->other_attributes, true);
-
-        return response()->json([
-            'product' => $product,
-        ], 200);
     }
-*/   
-
-
-
 
 
     /**
@@ -295,36 +232,19 @@ Route::prefix('products')->group( function () {
          * This function needs to be protected, just the administrator
          * can add items to the stock.
          */
-        //Data validation
-        $validatedData = $request->validate([
-            'name' => 'required|string',
-            'description' => 'required|string',
-            'price' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
-            'other_attributes' => 'nullable|array',
-            'other_attributes.material' => 'nullable|string',
-            'other_attributes.pattern' => 'nullable|string',
-            'other_attributes.brand' => 'nullable|string',
-            'other_attributes.care_instructions' => 'nullable|string',
-            'other_attributes.collection' => 'nullable|string',
-            'other_attributes.gender' => 'nullable|string',
-        ]);
+        $this->_validations( $request );
 
-        //$item = (object) $validatedData;
+        $request['other_attributes'] = json_encode($request['other_attributes']);
 
-        $product = Product::all(); //create($item->all());
+        $product = Product::create($request->all()); 
+        
+        //Tranformation of the JSON element other_atributes.
+        $product->other_attributes = json_decode($product->other_attributes, true);
 
         return response()->json([
-            '' => $validatedData['other_attributes'],
             'product' =>$product,
         ], 201);
     }
-
-
-
-
-
-
-
 
 
     /**
@@ -332,18 +252,58 @@ Route::prefix('products')->group( function () {
      */
     public function update(Request $request, int $id)
     {
+        /**
+         * This function needs to be protected, just the administrator
+         * can update items in the stock.
+         */
+        $this->_validations( $request );
+
+        $request['other_attributes'] = json_encode($request['other_attributes']);
+
         $product = Product::find($id);
+        
+        //If there are no product with that id in the database we return a 404.
+        if( !$product ) {
+            return response()->json([
+                "message" => "Product Not Found"
+            ], 404);
+        }
+        
         $product->update($request->all());
-        return response()->json($product,200);
+        
+        //Tranformation of the JSON element other_atributes.
+        $product->other_attributes = json_decode($product->other_attributes, true);
+
+        return response()->json([
+            'product' =>$product,
+        ], 200);
     }
 
+    
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(int $id)
     {
+        /**
+         * This function needs to be protected, just the administrator
+         * can delete items in the stock.
+         */
+        $this->_validations();
+
         $product = Product::find($id);
+
+        //If there are no product with that id in the database we return a 404.
+        if( !$product ) {
+            return response()->json([
+                "message" => "Product Not Found"
+            ], 404);
+        }
+
         $product->delete();
+        
         return response()->noContent();
     }
+
+
 }

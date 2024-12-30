@@ -27,12 +27,12 @@ Route::prefix('v1')->group(function () {
 
     //products
     Route::prefix('products')->group( function () {
-        Route::get('/search', [ProductController::class, 'search']);    //
-        Route::get('/', [ProductController::class, 'index']);           //
-        Route::post('/', [ProductController::class, 'store']);
-        Route::get('/{id}', [ProductController::class, 'show']);        //
-        Route::put('/{id}', [ProductController::class, 'update']);
-        Route::delete('/{id}', [ProductController::class, 'destroy']);
+        Route::get('/search', [ProductController::class, 'search']);
+        Route::get('/', [ProductController::class, 'index']);
+        Route::post('/', [ProductController::class, 'store']);          // should be private
+        Route::get('/{id}', [ProductController::class, 'show']);
+        Route::put('/{id}', [ProductController::class, 'update']);      // should be private
+        Route::delete('/{id}', [ProductController::class, 'destroy']);  // should be private
     });
 
     //orders
