@@ -212,6 +212,63 @@
 - All headers require authorization via a token provided at the login endpoint, as all endpoints are protected by the Sanctum Middleware.
 
 -----
-**[Instructions to Run the Project Locally](https://github.com/lilianabarbosa15/php-api-endpoints/tree/main/api-endpoints/)**
+-----
+
+# Instructions to Run the Project Locally
+
+Follow these steps to set up and run this project locally:
+
+### 1. Clone the repository  
+First, navigate to the folder where you want to download the repository. In the chosen folder, clone the repository using the following command:
+
+```bash
+git clone https://github.com/lilianabarbosa15/php-api-endpoints.git
+```
+
+### 2. Open the project
+Once the repository is cloned, navigate to the project folder and open it using your preferred code editor:
+
+```bash
+cd php-api-endpoints/api-endpoints
+code .
+```
+
+### 3. Install dependencies
+Open the terminal in your project folder and run the following commands to install the necessary dependencies:
+
+```bash
+composer install
+```
+
+### 4. Set up the environment file
+Copy the example environment configuration file to create your own .env file:
+
+```bash
+cp .env.example .env
+```
+
+### 5. Generate the application key
+Run the following command to generate the Laravel application key:
+
+``` bash
+php artisan key:generate
+```
+
+### 6. Run the application
+Start the local development server by executing the following:
+
+```bash
+php artisan serve
+```
+
+### 7. Run migrations and seed the database
+In a separate terminal window, run the migrations and seed the database:
+
+```bash
+php artisan migrate --seed
+```
+
+### 8. Access the project
+Finally, open your browser and go to the URL provided by the php artisan serve command (typically http://localhost).
 
 
