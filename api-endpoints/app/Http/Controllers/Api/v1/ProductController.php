@@ -162,15 +162,19 @@ class ProductController extends Controller
         $items = $this->_decodeJsonAttributes($items);
         $products->items($items);
 
+        if(!$products->items()) {
+            return response()->json(["message" => "Products Not Found"], 404);
+        }
+
         return response()->json( [
             'products' => $products,
-
         ], 200);
     }
 
 
     /**
      * Display the specified resource.
+     * e.g. http://api-endpoints.test/api/v1/products/1
      */
     public function show(int $id)
     {
