@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\OrderItem;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class OrderItemsTableSeeder extends Seeder

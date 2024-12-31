@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\CartItem;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CartItemsTableSeeder extends Seeder

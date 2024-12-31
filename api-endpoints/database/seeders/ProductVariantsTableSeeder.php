@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\ProductVariant;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ProductVariantsTableSeeder extends Seeder
