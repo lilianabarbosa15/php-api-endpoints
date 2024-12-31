@@ -137,7 +137,7 @@
               "quantity": 5
           },
           {
-              "product_variant_id": 3000,
+              "product_variant_id": 30,
               "quantity": 7
           }
       ]
@@ -145,4 +145,69 @@
 - **Returns:**
   - `HTTP/422` if the cart is empty, if the product variant does not exist (product_variant_id), or if any input data in the body is incorrect.
   - `HTTP/201` if the order is successfully created.
+
+## Notes:
+- All headers require authorization via a token provided at the login endpoint, as all endpoints are protected by the Sanctum Middleware.
+
+---
+
+## Shopping Cart
+
+### GET /api/v1/cart/
+- **Description:** Verifies the logged-in user and returns all shopping carts along with their cart items based on the user's session.
+- **Returns:**
+  - `HTTP/200` even if no shopping carts are found.
+  - `HTTP/401` if the user is not authenticated.
+
+### POST /api/v1/cart/add
+- **Description:** Adds one or more products of type `ProductVariant` (via the relationship with `CartItems`) to a `ShoppingCart`. The process verifies the stock availability for each variant and updates it accordingly.
+- **Example Body:**
+  ```json
+  {
+      "cart_items": [
+          {
+              "product_variant_id": 20,
+              "quantity": 1
+          },
+          {
+              "product_variant_id": 3,
+              "quantity": 6
+          },
+          {
+              "product_variant_id": 1,
+              "quantity": 5
+          }
+      ]
+  }
+- **Returns:**
+  - `HTTP/201` if the shopping cart is successfully created.
+  - `HTTP/422` if the quantity exceeds the available stock.
+  - `HTTP/404` if any product variant does not exist.
+  - `HTTP/401` if the user is not authenticated.
+
+### PUT /api/v1/cart/update/{id}
+- **Description:** The id in the URL corresponds to a cart_item_id. You must also provide the desired quantity in order to update the quantity of a product in the shopping cart. This cart corresponds to the last shopping cart associated with the authenticated user. After identifying the cart, its associated items are checked, and the specific item with the provided id is updated. The associated ProductVariant is also updated to reflect the stock changes.
+- **Example Body:**
+  ```json
+  {
+    "quantity": 20
+  }
+- **Returns:**
+  - `HTTP/201` if the quantity of the item is successfully updated.
+  - `HTTP/401` if the user is not authenticated.
+  - `HTTP/404` if the cart_item_id is not found or if the shopping cart has no items.
+  - `HTTP/422` if the updated quantity exceeds the available stock.
+  - `HTTP/400` if the provided ID is not numeric.
+
+### DELETE /api/v1/cart/remove/{id}
+- **Description:** The `id` in the URL corresponds to a `cart_item_id`. The difference compared to the `PUT /api/v1/cart/update/{id}` method is that no body is required for this request. This endpoint removes the specified item from the shopping cart.
+- **Returns:**
+  - `HTTP/204` if the item is successfully removed.
+  - `HTTP/401` if the user is not authenticated.
+  - `HTTP/404` if the cart_item_id is not found or if the shopping cart has no items.
+  - `HTTP/400` if the provided ID is not numeric.
+
+## Notes:
+- All headers require authorization via a token provided at the login endpoint, as all endpoints are protected by the Sanctum Middleware.
+
 
