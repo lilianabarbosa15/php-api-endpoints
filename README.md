@@ -210,4 +210,7 @@
 ## Notes:
 - All headers require authorization via a token provided at the login endpoint, as all endpoints are protected by the Sanctum Middleware.
 
+-----
+**[Instructions to Run the Project Locally](https://github.com/lilianabarbosa15/php-api-endpoints/tree/main/api-endpoints/)**
+
 
