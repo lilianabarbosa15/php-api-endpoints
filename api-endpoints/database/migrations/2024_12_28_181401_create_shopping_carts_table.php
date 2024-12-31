@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();                       //CartID
             $table->foreignIdFor(User::class)   // UserID
                 ->constrained()
-                ->cascadeOnDelete();
+                ->onDelete('cascade');
             $table->enum('status', ['pending', 'completed', 'shipped', 'cancelled'])
                 ->default('pending');
             $table->timestamps();   //OrderDate (created_at), LastUpdate (updated_at)

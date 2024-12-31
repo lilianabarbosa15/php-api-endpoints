@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();                       //OrderID
             $table->foreignIdFor(User::class)   // UserID
                 ->constrained()
-                ->cascadeOnDelete();
+                ->onDelete('cascade');
             $table->integer('total_amount')
                 ->unsigned()
                 ->default(0);

@@ -25,13 +25,7 @@ class Order extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
-
-    /*public function product_variants() {
-        return $this->belongsToMany(ProductVariant::class, 'order_items', 'order_id', 'product_variant_id')
-                    ->withPivot('quantity', 'unit_price') // to access the pivot table columns
-                    ->using(OrderItem::class);
-    }*/
-
+    
     public function order_items() {
         return $this->hasMany(OrderItem::class, 'order_id', 'id');
     }

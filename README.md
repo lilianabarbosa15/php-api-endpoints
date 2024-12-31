@@ -30,7 +30,7 @@
 
 ---
 
-## Products
+## Products - ProductVariants
 
 ### GET `/api/v1/products`
 - **Description:** This endpoint can be accessed by anyone, no authentication required to view the products. You can also pass the page number and the number of items you want to see in the response.
@@ -93,7 +93,7 @@
   - `HTTP/422` if there is an issue with the input data.
   - `HTTP/404` if the product with the given ID is not found.
 
-###  DELETE `/api/v1/products/{id}` (protected)
+### DELETE `/api/v1/products/{id}` (protected)
 - **No body required.**
 - **Returns:**
   - `HTTP/404` if the product is not found.
@@ -106,4 +106,6 @@
 ---
 
 ## Orders
+
+### 
 

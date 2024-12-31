@@ -21,7 +21,9 @@ class OrderController extends Controller
     public function index()
     {
         //Obtains the orders associated with the user
-        $orders = Auth::user()->orders;
+        $user = Auth::user();
+
+        $orders = Order::with('order_items')->where('user_id', $user->id)->get();
 
         return response()->json(
         [
@@ -33,21 +35,24 @@ class OrderController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * 
+     * http://api-endpoints.test/api/v1/orders/create
      */
     public function store(Request $request)
     {
         
-        $validatedData = $request->validate([
+        $request->validate([
             "order_status" => "required|string",
             "payment_method" => "required|string",
             "shipping_address" => "required|string",
-            'order_items' => 'required|array',
-            'order_items.*.product_variant_id' => 'required|integer|min:1',
-            'order_items.*.quantity' => 'required|integer|min:0',
+            'order_items' => 'nullable|array',  // Make order_items nullable
+            'order_items.*.product_variant_id' => 'required_if:order_items,integer|min:1',  // Validate only if order_items exists
+            'order_items.*.quantity' => 'required_if:order_items,integer|min:1',            // Validate only if order_items exists
         ]);
 
         //ShoppingCart status
-        $shopping_cart_items = Auth::user()->shopping_carts;
+        $user = Auth::user();
+        $shopping_cart_items = $user->shopping_carts;
 
         if(!$shopping_cart_items) {
             return response()->json(
@@ -58,23 +63,19 @@ class OrderController extends Controller
         
 
         //Process of creating a new Order
+        $newOrder_info = array_merge(['user_id'=> $user->id], $request->except('order_items'));
+        $newOrder = Order::create($newOrder_info);
 
-        $newOrder = new Order();
-        $newOrder->user_id = Auth::user()->id;
-        
         $total_amount = 0;
-        $newOrder->order_status = $validatedData['order_status'];
-        $newOrder->payment_method = $validatedData['payment_method'];
-        $newOrder->shipping_address= $validatedData['shipping_address'];
-        $newOrder->save();
-
-        // 
-        foreach ($validatedData['order_items'] as $item) {
+        
+        //Cheacking each item
+        foreach ($request['order_items'] as $item) {
 
             $product_variant = ProductVariant::find($item['product_variant_id']);
 
 
             if (!$product_variant) {
+                (Order::with('order_items')->find($newOrder->id))->delete();
                 return response()->json([
                     "message" => "The product_variant_id is not valid. Please adjust the value and try again.",
                 ], 422);
@@ -84,34 +85,32 @@ class OrderController extends Controller
             $product = Product::find( $product_variant->product_id );
 
             if( !$product ) {
+                (Order::with('order_items')->find($newOrder->id))->delete();
                 return response()->json([
                     "message" => "The product_variant_id is not valid. Please adjust the value and try again.",
                 ], 422);
             }
-
-            $newOrderItems = new OrderItem();
-            $newOrderItems->order_id = $newOrder->id;
-            $newOrderItems->product_variant_id = $item['product_variant_id'];
-            $newOrderItems->quantity = $item['quantity'];
-            $newOrderItems->unit_price = $product->price;
-            $newOrderItems->save();
-                    
+            
+            $newOrderItems_info = array_merge(
+                ['order_id'=> $newOrder->id], 
+                $item,
+                ['unit_price'=> $product->price]
+                );
+            
+            OrderItem::create($newOrderItems_info);
+            
             $total_amount += $product->price;
-                    
-            ($newOrder->order_items)->push($newOrderItems);
-                
+            
         }
 
-        $newOrder->total_amount = $total_amount;
-        $newOrder->save();
-            
+        $newOrder->update(['total_amount' => $total_amount]);
+
         return response()->json(
             [
-                'orders' => $newOrder,
+                'orders' => Order::with('order_items')->find($newOrder->id),
                 'message' => 'Orders Successfully Created',
             ], 201);
-               
-            
+    
     }
     
 
@@ -122,6 +121,13 @@ class OrderController extends Controller
     {
         //Get user orders by id
         $order = Order::with('order_items')->find($id);
+
+        //Verifies the item's existance
+        if (!$order) {
+            return response()->json([
+                "message" => "Product Not Found"
+            ], 404);
+        }
 
         //Use Gate so that the logged in user can see only their orders. Gate rules are in the boot method of the AppServiceProviders class
         if (! Gate::allows('user-view-order', $order)) {

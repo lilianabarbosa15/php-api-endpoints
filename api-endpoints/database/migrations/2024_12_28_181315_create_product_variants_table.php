@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();                           //VariantID
             $table->foreignIdFor(Product::class)    //ProductID
                 ->constrained()
-                ->cascadeOnDelete();
+                ->onDelete('cascade');
             $table->string('color', 7);             //#RRGGBB
             $table->string('size', 3);              // Size as a string (S, M, L, XL, etc.)
             $table->integer('stock_quantity')
