@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserRequest;
-
 use Laravel\Sanctum\PersonalAccessToken;
 
 
@@ -26,11 +25,15 @@ class AuthController extends Controller
     public function register(UserRequest $request) 
     {
 
-        //Data validation
-        $validatedData = $request->validated();
+        //Validation is already handled by the UserRequest class
+        $validated = $request->validated();
 
-        //Save user
-        $user = User::create($validatedData);
+        //Use the validated data to create a new user
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+        ]);
 
         return response()->json(
             [
@@ -50,7 +53,6 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
 
         //Get user by email
         $user = User::where('email', $validatedData['email'])->first();
@@ -114,13 +116,36 @@ class AuthController extends Controller
      */
     public function logout(Request $request) 
     {
-        // Revoke all tokens
-		$request->user()->tokens()->delete();
+        //Data validation
+        $validatedData = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-		// Revoke the current token
-		$request->user()->currentAccessToken()->delete();
+        //Get user by email
+        $user = User::where('email', $validatedData['email'])->first();
 
-        return response()->json(['message' => 'Logged out successfully'], 200);
+        //Verifies the user's existence
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        //Check if the passwords received are not equal to the one hashed in the database.
+        else if (!Hash::check($validatedData['password'], $user->password )) {     
+            return response()->json(['message' => 'The provided credentials are incorrect'], 401);
+        }
+        
+        //Check user status
+        if ($user->tokens->isEmpty()) {
+            return response()->json([ 'message' => 'User is not logged in and has no tokens.'], 400);
+        }
+
+        //Iterate over the user's tokens and delete each one
+        $user->tokens->each(function ($token) {
+            $token->delete(); // Delete the token
+        });
+
+        return response()->json([ 'message' => 'Logged out successfully' ], 200);
         
     }
 }

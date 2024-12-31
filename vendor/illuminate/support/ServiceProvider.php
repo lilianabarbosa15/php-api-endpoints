@@ -287,7 +287,7 @@ abstract class ServiceProvider
      */
     protected function loadFactoriesFrom($paths)
     {
-        $this->callAfterResolving(ModelFactory::class, function ($factory) use ($paths) {
+        $this->callAfterResolving(\Illuminate\Database\Eloquent\Factories\Factory::class, function ($factory) use ($paths) {
             foreach ((array) $paths as $path) {
                 $factory->load($path);
             }

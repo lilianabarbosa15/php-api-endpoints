@@ -15,7 +15,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::middleware('auth:sanctum')->get('profile', [AuthController::class, 'profile'])->name('profile');
-    Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
     //shopping cart
     Route::prefix('cart')->middleware('auth:sanctum')->group( function () {
