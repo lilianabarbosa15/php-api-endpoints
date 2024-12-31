@@ -107,5 +107,42 @@
 
 ## Orders
 
-### 
+### GET /api/v1/orders
+- **Description:** This endpoint checks the logged-in user and returns all orders associated with that user.
+- **Returns:**
+  - `HTTP/200` with an array of orders associated with the logged-in user, even if the array is empty.
+
+### GET /api/v1/orders/{id}
+- **Description:** Based on the logged-in user, this endpoint searches for a specific order.
+- **Returns:**
+  - `HTTP/404` if the specified order is not found in the database.
+  - `HTTP/403` if the order belongs to a different user.
+  - `HTTP/200` if the order is found and belongs to the logged-in user.
+
+### POST /api/v1/orders/create
+- **Description:** Creates a new order. The order data should be included in the request body, including order items.
+- **Example Body:**
+  ```json
+  {
+      "order_status": "pending",
+      "payment_method": "Visa",
+      "shipping_address": "Torre Navarra apt. x ",
+      "order_items": [
+          {
+              "product_variant_id": 2,
+              "quantity": 10
+          },
+          {
+              "product_variant_id": 20,
+              "quantity": 5
+          },
+          {
+              "product_variant_id": 3000,
+              "quantity": 7
+          }
+      ]
+  }
+- **Returns:**
+  - `HTTP/422` if the cart is empty, if the product variant does not exist (product_variant_id), or if any input data in the body is incorrect.
+  - `HTTP/201` if the order is successfully created.
 

@@ -17,6 +17,8 @@ class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * 
+     * http://api-endpoints.test/api/v1/orders/
      */
     public function index()
     {
@@ -83,13 +85,6 @@ class OrderController extends Controller
             }
             
             $product = Product::find( $product_variant->product_id );
-
-            if( !$product ) {
-                (Order::with('order_items')->find($newOrder->id))->delete();
-                return response()->json([
-                    "message" => "The product_variant_id is not valid. Please adjust the value and try again.",
-                ], 422);
-            }
             
             $newOrderItems_info = array_merge(
                 ['order_id'=> $newOrder->id], 
@@ -116,6 +111,8 @@ class OrderController extends Controller
 
     /**
      * Display the specified resource.
+     * 
+     * e.g. http://api-endpoints.test/api/v1/orders/8
      */
     public function show(string $id)
     {
